@@ -46,8 +46,7 @@ loginRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         success: true,
         message: 'Logged in successfully',
         user: user,
-        events: user.events,
-        toDos: user.toDos,
+        articles: user.articles,
     });
 }));
 exports.default = loginRouter;

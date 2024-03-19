@@ -8,8 +8,7 @@ import User from '../models/user';
 const usersRouter = Router();
 
 const populateQuery = [
-  { path: 'events', select: 'title' },
-  { path: 'toDos', select: 'description' },
+  { path: 'articles', select: 'title' },
 ];
 
 // Get All Users
@@ -37,53 +36,39 @@ usersRouter.get('/:token', async (req, res) => {
   });
 });
 
-// Get User Events by Username
-usersRouter.get('/:username/events', async (req, res) => {
+// Get User Articles by Username
+usersRouter.get('/:username/articles', async (req, res) => {
   const { username } = req.params;
   const user = await User.findOne({ username: username });
-  console.log('backend get user events user:', user);
+  console.log('backend get user articles user:', user);
   if (user) {
     res.json({
       success: true,
-      events: user.events,
+      articles: user.articles,
     });
   } else {
     res.status(404).end();
   }
 });
 
-// Get User ToDos by Username
-usersRouter.get('/:username/toDos', async (req, res) => {
-  const { username } = req.params;
+// Delete Article
+usersRouter.put('/:username/articles/:articleId', async (req, res) => {
+  const { username, articleId } = req.params;
+  console.log('usersRouter put articleId:', articleId);
   const user = await User.findOne({ username: username });
 
   if (user) {
-    res.json({
-      toDos: user.toDos,
-    });
-  } else {
-    res.status(404).end();
-  }
-});
-
-// Delete Event
-usersRouter.put('/:username/events/:eventId', async (req, res) => {
-  const { username, eventId } = req.params;
-  console.log('usersRouter put eventId:', eventId);
-  const user = await User.findOne({ username: username });
-
-  if (user) {
-    const { events } = user;
-    const newEvents = events.filter(
-      (event) => event._id.toString() !== eventId
+    const { articles } = user;
+    const newArticles = articles.filter(
+      (article) => article._id.toString() !== articleId
     );
 
-    user.events = newEvents;
+    user.articles = newArticles;
     await user.save();
 
     res.json({
       success: true,
-      events: newEvents,
+      articles: newArticles,
     });
   } else {
     res.status(404).end();

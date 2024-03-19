@@ -1,6 +1,4 @@
 import mongoose from 'mongoose';
-import EventModel from './event';
-import ToDoModel from './toDo';
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -14,8 +12,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     minLength: 4,
   },
-  events: [],
-  toDos: [],
+  articles: [],
 });
 
 userSchema.set('toJSON', {

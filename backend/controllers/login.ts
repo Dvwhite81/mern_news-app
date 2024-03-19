@@ -40,8 +40,7 @@ loginRouter.post('/', async (req, res) => {
     success: true,
     message: 'Logged in successfully',
     user: user,
-    events: user.events,
-    toDos: user.toDos,
+    articles: user.articles,
   });
 });
 

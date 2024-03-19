@@ -19,8 +19,7 @@ const config_1 = __importDefault(require("../utils/config"));
 const user_1 = __importDefault(require("../models/user"));
 const usersRouter = (0, express_1.Router)();
 const populateQuery = [
-    { path: 'events', select: 'title' },
-    { path: 'toDos', select: 'description' },
+    { path: 'articles', select: 'title' },
 ];
 // Get All Users
 usersRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -42,47 +41,34 @@ usersRouter.get('/:token', (req, res) => __awaiter(void 0, void 0, void 0, funct
         user: dbUser,
     });
 }));
-// Get User Events by Username
-usersRouter.get('/:username/events', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+// Get User Articles by Username
+usersRouter.get('/:username/articles', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username } = req.params;
     const user = yield user_1.default.findOne({ username: username });
-    console.log('backend get user events user:', user);
+    console.log('backend get user articles user:', user);
     if (user) {
         res.json({
             success: true,
-            events: user.events,
+            articles: user.articles,
         });
     }
     else {
         res.status(404).end();
     }
 }));
-// Get User ToDos by Username
-usersRouter.get('/:username/toDos', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { username } = req.params;
+// Delete Article
+usersRouter.put('/:username/articles/:articleId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { username, articleId } = req.params;
+    console.log('usersRouter put articleId:', articleId);
     const user = yield user_1.default.findOne({ username: username });
     if (user) {
-        res.json({
-            toDos: user.toDos,
-        });
-    }
-    else {
-        res.status(404).end();
-    }
-}));
-// Delete Event
-usersRouter.put('/:username/events/:eventId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { username, eventId } = req.params;
-    console.log('usersRouter put eventId:', eventId);
-    const user = yield user_1.default.findOne({ username: username });
-    if (user) {
-        const { events } = user;
-        const newEvents = events.filter((event) => event._id.toString() !== eventId);
-        user.events = newEvents;
+        const { articles } = user;
+        const newArticles = articles.filter((article) => article._id.toString() !== articleId);
+        user.articles = newArticles;
         yield user.save();
         res.json({
             success: true,
-            events: newEvents,
+            articles: newArticles,
         });
     }
     else {
