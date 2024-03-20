@@ -1,4 +1,4 @@
-import { CheckboxField } from '../utils/types';
+import { CheckboxField } from '../../utils/types';
 
 interface FormCheckboxProps {
   field: CheckboxField;

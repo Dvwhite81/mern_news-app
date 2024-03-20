@@ -1,11 +1,11 @@
 import { SyntheticEvent, useState } from 'react';
-import AuthForm from '../components/AuthForm';
+import AuthForm from '../components/forms/AuthForm';
 
-interface LoginPageProps {
+interface LoginProps {
   handleLogin: (username: string, password: string) => void;
 }
 
-const LoginPage = ({ handleLogin }: LoginPageProps) => {
+const Login = ({ handleLogin }: LoginProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -43,4 +43,4 @@ const LoginPage = ({ handleLogin }: LoginPageProps) => {
   );
 };
 
-export default LoginPage;
+export default Login;

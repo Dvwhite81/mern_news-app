@@ -2,8 +2,8 @@ export interface UserType {
   _id: string;
   username: string;
   password: string;
-  events: EventType[];
-  toDos: ToDoType[];
+  articles: ArticleType[];
+  categories: string[];
 }
 
 export interface InputField {
@@ -33,43 +33,9 @@ export interface UserResult {
   message: string;
 }
 
-export interface ToDoFormData {
+export interface ArticleType {
   title: string;
-  urgency: string;
-  color: string;
-}
-
-export interface ToDoType extends ToDoFormData {
-  _id: string;
-}
-
-export interface EventFormData {
-  description: string;
-  allDay: boolean;
-  start: string;
-  end: string;
-}
-
-export interface EventType {
-  _id: string;
-  description: string;
-  allDay: boolean;
-  start: string;
-  end: string;
-}
-
-export interface EventStyleType {
-  style: {
-    backgroundColor: string | undefined;
-    borderColor: string | undefined;
-  };
-}
-
-export interface CurrentDayType {
-  currentMonth: boolean;
-  date: Date;
-  month: number;
-  number: number;
-  selected: boolean;
-  year: number;
+  snippet: string;
+  url: string;
+  image_url: string;
 }

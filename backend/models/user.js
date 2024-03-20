@@ -17,6 +17,7 @@ const userSchema = new mongoose_1.default.Schema({
         minLength: 4,
     },
     articles: [],
+    categories: [],
 });
 userSchema.set('toJSON', {
     transform: (document, returnedUser) => {

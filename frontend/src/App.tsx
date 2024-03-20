@@ -1,20 +1,22 @@
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import moment from 'moment';
 
-import { AuthResult, EventType, UserType } from './utils/types';
+import { ArticleType, AuthResult, UserType } from './utils/types';
 import userService from './services/userService';
 
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import HomePage from './pages/HomePage';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import NavBar from './components/navbar/NavBar';
+import Profile from './pages/Profile';
+import Register from './pages/Register';
 import './App.css';
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState<UserType | null>(null);
-  const [userEvents, setUserEvents] = useState<EventType[]>([]);
-
+  const [userArticles, setUserArticles] = useState<ArticleType[]>([]);
+  const [userCategories, setUserCategories] = useState<string[]>([]);
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,7 +35,8 @@ function App() {
             console.log('checkLogged user:', user);
 
             setLoggedInUser(user);
-            setUserEvents(user.events);
+            setUserArticles(user.articles);
+            setUserCategories(user.categories);
             navigate('/');
           } else {
             localStorage.removeItem('token');
@@ -96,7 +99,8 @@ function App() {
         if (user && token) {
           setLoggedInUser(user);
           localStorage.setItem('token', token);
-          setUserEvents(user.events);
+          setUserArticles(user.articles);
+          setUserCategories(user.categories);
           navigate('/');
         }
 
@@ -107,51 +111,58 @@ function App() {
     }
   };
 
-  const addEvent = async (
-    description: string,
-    allDay: boolean,
-    start: string,
-    end: string
-  ) => {
+  const saveArticle = async (article: ArticleType) => {
     const token = localStorage.getItem('token');
 
     if (!loggedInUser || !token) return;
 
-    const newEvent = {
-      description,
-      allDay,
-      start: moment(start).format('yyyy-MM-DD'),
-      end: moment(end).format('yyyy-MM-DD'),
-    };
-
-    const result = await userService.addUserEvent(token, newEvent);
+    const result = await userService.addUserArticle(token, article);
 
     if (result) {
       const { success, message } = result;
 
       if (success) {
         toast.success(message);
-        setUserEvents(result.events);
+        setUserArticles(result.articles);
       } else {
         toast.error(message);
       }
     }
   };
 
-  const handleDeleteEvent = async (eventId: string) => {
-    console.log('handleDeleteEvent eventId:', eventId);
+  const saveCategory = async (category: string) => {
+    const token = localStorage.getItem('token');
+
+    if (!loggedInUser || !token) return;
+
+    const result = await userService.addUserCategory(token, category);
+
+    if (result) {
+      const { success, message } = result;
+
+      if (success) {
+        toast.success(message);
+        setUserCategories(result.categories);
+      } else {
+        toast.error(message);
+      }
+    }
+  };
+
+  const handleDeleteArticle = async (articleId: string) => {
+    console.log('handleDeleteArticle articleId:', articleId);
     if (!loggedInUser) return;
 
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const result = await userService.deleteUserEvent(token, eventId);
+    const result = await userService.deleteUserArticle(token, articleId);
     console.log('handleDelete result:', result);
     if (result) {
-      const { success, events, message } = result;
+      const { success, articles, message } = result;
 
       if (success) {
-        setUserEvents(events);
+        setUserArticles(articles);
         toast.success(message);
       } else {
         toast.error(message);
@@ -159,9 +170,28 @@ function App() {
     }
   };
 
-  const handleLogOut = (e: SyntheticEvent) => {
-    e.preventDefault();
-    console.log('handleLogout e:', e);
+  const handleDeleteCategory = async (category: string) => {
+    console.log('handleDeleteArticle category:', category);
+    if (!loggedInUser) return;
+
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    const result = await userService.deleteUserCategory(token, category);
+    console.log('handleDelete result:', result);
+    if (result) {
+      const { success, categories, message } = result;
+
+      if (success) {
+        setUserCategories(categories);
+        toast.success(message);
+      } else {
+        toast.error(message);
+      }
+    }
+  };
+
+  const handleLogOut = () => {
     localStorage.removeItem('token');
     setLoggedInUser(null);
     navigate('/login');
@@ -170,27 +200,27 @@ function App() {
 
   return (
     <div id="main-container">
+      <NavBar loggedInUser={loggedInUser} handleLogOut={handleLogOut} />
       <Routes>
         <Route
-          path="/"
+          path="/profile"
           element={
-            <HomePage
+            <Profile
               loggedInUser={loggedInUser}
-              userEvents={userEvents}
-              addEvent={addEvent}
-              handleDeleteEvent={handleDeleteEvent}
+              userArticles={userArticles}
+              userCategories={userCategories}
+              handleDeleteArticle={handleDeleteArticle}
+              handleDeleteCategory={handleDeleteCategory}
               handleLogOut={handleLogOut}
             />
           }
         />
+        <Route path="/" element={<Home />} />
         <Route
           path="/register"
-          element={<RegisterPage handleRegister={handleRegister} />}
+          element={<Register handleRegister={handleRegister} />}
         />
-        <Route
-          path="/login"
-          element={<LoginPage handleLogin={handleLogin} />}
-        />
+        <Route path="/login" element={<Login handleLogin={handleLogin} />} />
       </Routes>
       <ToastContainer theme="colored" newestOnTop />
     </div>

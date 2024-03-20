@@ -1,15 +1,33 @@
-@import url('/src/styles/pages.css');
-@import url('/src/styles/forms.css');
+@import url('/src/styles/index.css');
+
+:root {
+  --nav-height: 10vh;
+  --main-height: 90vh;
+  --sidebar-width: 25vw;
+  --main-width: 75vw;
+}
 
 #root,
 #main-container {
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow-y: hidden;
   width: 100%;
 }
 
 #main-container {
   align-items: center;
   text-align: center;
+}
+
+.link {
+  font-size: larger;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.link:hover {
+  cursor: pointer;
+  transform: scale(1.2);
 }

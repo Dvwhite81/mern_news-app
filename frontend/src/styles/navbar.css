@@ -1,0 +1,13 @@
+#navbar {
+  align-items: center;
+  background-color: black;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  width: 100%;
+}
+
+.nav-link {
+  color: whitesmoke;
+  margin: 1rem;
+}

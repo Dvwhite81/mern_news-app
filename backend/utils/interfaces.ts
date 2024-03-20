@@ -12,10 +12,9 @@ export interface CustomJwtPayload extends JwtPayload {
 
 export interface ArticleType {
   title: string;
-  teaser: string;
-  articleBody: string;
-  articleStatus?: number;
-  created: Date;
+  snippet: string;
+  url: string;
+  image_url: string;
 }
 
 export interface UserType {
@@ -23,4 +22,5 @@ export interface UserType {
   username: string;
   password: string;
   articles: ArticleType[];
+  categories: string[];
 }

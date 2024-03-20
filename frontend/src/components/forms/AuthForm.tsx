@@ -1,5 +1,5 @@
 import { SyntheticEvent } from 'react';
-import { InputField } from '../utils/types';
+import { InputField } from '../../utils/types';
 import { Link } from 'react-router-dom';
 import FormInput from './FormInput';
 

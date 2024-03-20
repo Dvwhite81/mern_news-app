@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { EventFormData } from '../utils/types';
+import { ArticleFormData } from '../utils/types';
 
 const baseUrl = 'http://localhost:7000/api';
 
@@ -41,42 +41,53 @@ const register = async (username: string, password: string) => {
   }
 };
 
-const getEventById = async (id: string) => {
-  const { data } = await axios.get(`${baseUrl}/events/${id}`);
-  console.log('getEventById data:', data);
+const getArticleById = async (id: string) => {
+  const { data } = await axios.get(`${baseUrl}/articles/${id}`);
+  console.log('getArticleById data:', data);
 
   if (data) {
     const { success } = data;
-    console.log('getEventById success:', success);
+    console.log('getArticleById success:', success);
 
     if (success) {
-      const { event } = data;
+      const { article } = data;
       return {
         success: true,
-        event: event,
+        article: article,
       };
     }
   }
 };
 
-const getUserEvents = async (username: string, token: string) => {
-  const { data } = await axios.get(`${baseUrl}/users/${username}/events`, {
+const getUserArticles = async (token: string) => {
+  const { user } = await getUserByToken(token);
+
+  if (!user) {
+    return {
+      success: false,
+      message: 'No user found',
+    };
+  }
+
+  const { id } = user;
+
+  const { data } = await axios.get(`${baseUrl}/users/${id}/articles`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log('getUserEvents data:', data);
+  console.log('getUserArticles data:', data);
   if (data.success) {
-    const eventIds = data.events;
-    const userEvents = [];
+    const articleIds = data.articles;
+    const userArticles = [];
 
-    for (const id of eventIds) {
-      const event = getEventById(id);
-      userEvents.push(event);
+    for (const id of articleIds) {
+      const article = getArticleById(id);
+      userArticles.push(article);
     }
     return {
       success: true,
-      events: userEvents,
+      articles: userArticles,
     };
   } else {
     return {
@@ -86,12 +97,45 @@ const getUserEvents = async (username: string, token: string) => {
   }
 };
 
-const addUserEvent = async (token: string, newEvent: EventFormData) => {
+const getUserCategories = async (token: string) => {
+  const { user } = await getUserByToken(token);
+
+  if (!user) {
+    return {
+      success: false,
+      message: 'No user found',
+    };
+  }
+
+  const { id } = user;
+  const { data } = await axios.get(`${baseUrl}/users/${id}/categories`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  console.log('getUserCategories data:', data);
+  if (data.success) {
+    const categories = data.categories;
+
+    return {
+      success: true,
+      categories: categories,
+    };
+  } else {
+    return {
+      success: false,
+      message: data.message,
+    };
+  }
+};
+
+const addUserArticle = async (token: string, newArticle: ArticleFormData) => {
   const { data } = await axios.post(
-    `${baseUrl}/events`,
+    `${baseUrl}/articles`,
     {
       token,
-      event: newEvent,
+      article: newArticle,
     },
     {
       headers: {
@@ -100,13 +144,13 @@ const addUserEvent = async (token: string, newEvent: EventFormData) => {
     }
   );
 
-  console.log('addUserEvent data:', data);
+  console.log('addUserArticle data:', data);
   if (data.success) {
     return {
       success: true,
       message: data.message,
-      newEvent: newEvent,
-      events: data.events,
+      newArticle: newArticle,
+      articles: data.articles,
     };
   } else {
     return {
@@ -116,23 +160,97 @@ const addUserEvent = async (token: string, newEvent: EventFormData) => {
   }
 };
 
-const deleteUserEvent = async (token: string, eventId: string) => {
+const addUserCategory = async (token:string, newCategory: string) => {
   const { user } = await getUserByToken(token);
-  console.log('deleteUserEvent eventId:', eventId);
-  const { username } = user;
 
-  const { data } = await axios.put(
-    `${baseUrl}/users/${username}/events/${eventId}`
+  if (!user) {
+    return {
+      success: false,
+      message: 'No user found',
+    };
+  }
+
+  const { id } = user;
+  const { data } = await axios.post(
+    `${baseUrl}/users/${id}/categories/${newCategory}`,
+    {
+      token,
+      category: newCategory,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
   );
-  console.log('deleteUserEvent data:', data);
+
   if (data.success) {
     return {
       success: true,
-      message: 'Deleted event',
-      events: data.events,
+      message: data.message,
+      newCategory: newCategory,
+      categories: data.categories,
+    };
+  } else {
+    return {
+      success: false,
+      message: data.message,
+    };
+  }
+
+};
+
+const deleteUserArticle = async (token: string, articleId: string) => {
+  const { user } = await getUserByToken(token);
+
+  if (!user) {
+    return {
+      success: false,
+      message: 'No user found',
+    };
+  }
+
+  console.log('deleteUserArticle articleId:', articleId);
+  const { id } = user;
+
+  const { data } = await axios.put(
+    `${baseUrl}/users/${id}/articles/${articleId}`
+  );
+  console.log('deleteUserArticle data:', data);
+  if (data.success) {
+    return {
+      success: true,
+      message: 'Deleted article',
+      articles: data.articles,
     };
   }
 };
+
+const deleteUserCategory = async (token: string, category: string) => {
+  const { user } = await getUserByToken(token);
+
+  if (!user) {
+    return {
+      success: false,
+      message: 'No user found',
+    };
+  }
+  
+  console.log('deleteUserCategory categoryId:', category);
+  const { id } = user;
+
+  const { data } = await axios.put(
+    `${baseUrl}/users/${id}/categories/${category}`
+  );
+  console.log('deleteUserCategory data:', data);
+  if (data.success) {
+    return {
+      success: true,
+      message: 'Deleted category',
+      categories: data.categories,
+    };
+  }
+}
 
 const getUserByToken = async (token: string) => {
   const { data } = await axios.get(`${baseUrl}/users/${token}`);
@@ -151,10 +269,13 @@ const getUserByToken = async (token: string) => {
 };
 
 export default {
-  addUserEvent,
-  deleteUserEvent,
+  addUserArticle,
+  addUserCategory,
+  deleteUserArticle,
+  deleteUserCategory,
   getUserByToken,
-  getUserEvents,
+  getUserArticles,
+  getUserCategories,
   login,
   register,
 };

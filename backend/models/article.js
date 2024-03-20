@@ -9,15 +9,15 @@ const articleSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
-    teaser: {
+    snippet: {
         type: String,
         required: true,
     },
-    articleBody: {
+    url: {
         type: String,
         required: true,
     },
-    articleStatus: {
+    image_url: {
         type: Number,
         default: 1,
     },

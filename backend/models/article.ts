@@ -5,22 +5,17 @@ const articleSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  teaser: {
+  snippet: {
     type: String,
     required: true,
   },
-  articleBody: {
+  url: {
     type: String,
     required: true,
   },
-  articleStatus: {
+  image_url: {
     type: Number,
     default: 1,
-  },
-  created: {
-    type: Date,
-    required: true,
-    default: new Date(),
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,

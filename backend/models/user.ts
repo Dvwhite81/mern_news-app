@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
     minLength: 4,
   },
   articles: [],
+  categories: [],
 });
 
 userSchema.set('toJSON', {

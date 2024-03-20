@@ -1,4 +1,4 @@
-import { InputField } from '../utils/types';
+import { InputField } from '../../utils/types';
 
 interface FormInputProps {
   field: InputField;

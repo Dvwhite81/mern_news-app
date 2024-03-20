@@ -1,7 +1,7 @@
 import { SyntheticEvent, useState } from 'react';
-import AuthForm from '../components/AuthForm';
+import AuthForm from '../components/forms/AuthForm';
 
-interface RegisterPageProps {
+interface RegisterProps {
   handleRegister: (
     username: string,
     password: string,
@@ -9,7 +9,7 @@ interface RegisterPageProps {
   ) => void;
 }
 
-const RegisterPage = ({ handleRegister }: RegisterPageProps) => {
+const Register = ({ handleRegister }: RegisterProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmation, setConfirmation] = useState('');
@@ -55,4 +55,4 @@ const RegisterPage = ({ handleRegister }: RegisterPageProps) => {
   );
 };
 
-export default RegisterPage;
+export default Register;

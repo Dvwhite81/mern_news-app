@@ -36,10 +36,10 @@ usersRouter.get('/:token', async (req, res) => {
   });
 });
 
-// Get User Articles by Username
-usersRouter.get('/:username/articles', async (req, res) => {
-  const { username } = req.params;
-  const user = await User.findOne({ username: username });
+// Get User Articles by userId
+usersRouter.get('/:userId/articles', async (req, res) => {
+  const { userId } = req.params;
+  const user = await User.findById(userId);
   console.log('backend get user articles user:', user);
   if (user) {
     res.json({
@@ -51,11 +51,26 @@ usersRouter.get('/:username/articles', async (req, res) => {
   }
 });
 
+// Get User Categories by userId
+usersRouter.get('/:userId/categories', async (req, res) => {
+  const { userId } = req.params;
+  const user = await User.findById(userId);
+  console.log('backend get user categories user:', user);
+  if (user) {
+    res.json({
+      success: true,
+      categories: user.categories,
+    });
+  } else {
+    res.status(404).end();
+  }
+});
+
 // Delete Article
-usersRouter.put('/:username/articles/:articleId', async (req, res) => {
-  const { username, articleId } = req.params;
+usersRouter.put('/:userId/articles/:articleId', async (req, res) => {
+  const { userId, articleId } = req.params;
   console.log('usersRouter put articleId:', articleId);
-  const user = await User.findOne({ username: username });
+  const user = await User.findById(userId);
 
   if (user) {
     const { articles } = user;
@@ -69,6 +84,52 @@ usersRouter.put('/:username/articles/:articleId', async (req, res) => {
     res.json({
       success: true,
       articles: newArticles,
+    });
+  } else {
+    res.status(404).end();
+  }
+});
+
+// Add Category
+usersRouter.put('/:userId/categories/:category', async (req, res) => {
+  const { userId, category } = req.params;
+  console.log('usersRouter put category:', category);
+  const user = await User.findById(userId);
+
+  if (user) {
+    const { categories } = user;
+    const newCategories = categories.concat(category);
+
+    user.categories = newCategories;
+    await user.save();
+
+    res.json({
+      success: true,
+      categories: newCategories,
+    });
+  } else {
+    res.status(404).end();
+  }
+});
+
+// Delete Category
+usersRouter.put('/:userId/categories/:categoryId', async (req, res) => {
+  const { userId, categoryId } = req.params;
+  console.log('usersRouter put categoryId:', categoryId);
+  const user = await User.findById(userId);
+
+  if (user) {
+    const { categories } = user;
+    const newCategories = categories.filter(
+      (category) => category._id.toString() !== categoryId
+    );
+
+    user.categories = newCategories;
+    await user.save();
+
+    res.json({
+      success: true,
+      categories: newCategories,
     });
   } else {
     res.status(404).end();

@@ -35,12 +35,12 @@ articlesRouter.post('/', (req, res) => __awaiter(void 0, void 0, void 0, functio
         return res.status(401).json({ error: 'missing or invalid token' });
     }
     const { article } = body;
-    const { title, teaser, articleBody, articleStatus, created } = article;
+    const { title, snippet, url, image_url, created } = article;
     const newArticleModel = new article_1.default({
         title,
-        teaser,
-        articleBody,
-        articleStatus,
+        snippet,
+        url,
+        image_url,
         created,
         user: user.id,
     });
@@ -69,12 +69,12 @@ articlesRouter.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, fu
 }));
 articlesRouter.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const { title, teaser, articleBody, articleStatus, created } = req.body;
+    const { title, snippet, url, image_url, created } = req.body;
     const article = {
         title,
-        teaser,
-        articleBody,
-        articleStatus,
+        snippet,
+        url,
+        image_url,
         created,
     };
     const updatedArticleModel = yield article_1.default.findByIdAndUpdate(id, article, {

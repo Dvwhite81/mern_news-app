@@ -25,14 +25,13 @@ articlesRouter.post('/', async (req, res: Response) => {
   }
 
   const { article } = body;
-  const { title, teaser, articleBody, articleStatus, created } = article;
+  const { title, snippet, url, image_url } = article;
 
   const newArticleModel = new ArticleModel({
     title,
-    teaser,
-    articleBody,
-    articleStatus,
-    created,
+    snippet,
+    url,
+    image_url,
     user: user.id,
   });
 
@@ -64,13 +63,13 @@ articlesRouter.delete('/:id', async (req, res: Response) => {
 
 articlesRouter.put('/:id', async (req, res: Response) => {
   const { id } = req.params;
-  const { title, teaser, articleBody, articleStatus, created } = req.body;
+  const { title, snippet, url, image_url, created } = req.body;
 
   const article = {
     title,
-    teaser,
-    articleBody,
-    articleStatus,
+    snippet,
+    url,
+    image_url,
     created,
   };
 
