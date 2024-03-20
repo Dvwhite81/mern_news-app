@@ -7,13 +7,9 @@ import User from '../models/user';
 
 const usersRouter = Router();
 
-const populateQuery = [
-  { path: 'articles', select: 'title' },
-];
-
 // Get All Users
 usersRouter.get('/', async (req, res) => {
-  const users = await User.find({}).populate(populateQuery);
+  const users = await User.find({});
   res.json(users);
 });
 
@@ -66,8 +62,41 @@ usersRouter.get('/:userId/categories', async (req, res) => {
   }
 });
 
+// Add Article
+usersRouter.post('/:userId/articles', async (req, res) => {
+  console.log('save')
+  const { userId } = req.params;
+  const { article } = req.body;
+
+  const user = await User.findById(userId);
+  console.log('user:', user);
+
+  if (user) {
+    const { articles } = user;
+    console.log('articles:', articles);
+
+    if (articles.includes(article)) {
+      return res.json({
+        success: false,
+        message: 'Article already saved',
+      });
+    }
+    const newArticles = articles.concat(article);
+    console.log('newArticles:', newArticles);
+    user.articles = newArticles;
+    await user.save();
+
+    res.json({
+      success: true,
+      articles: newArticles,
+    });
+  } else {
+    res.status(404).end();
+  }
+});
+
 // Delete Article
-usersRouter.put('/:userId/articles/:articleId', async (req, res) => {
+usersRouter.delete('/:userId/articles/:articleId', async (req, res) => {
   const { userId, articleId } = req.params;
   console.log('usersRouter put articleId:', articleId);
   const user = await User.findById(userId);
@@ -91,15 +120,26 @@ usersRouter.put('/:userId/articles/:articleId', async (req, res) => {
 });
 
 // Add Category
-usersRouter.put('/:userId/categories/:category', async (req, res) => {
-  const { userId, category } = req.params;
+usersRouter.post('/:userId/categories', async (req, res) => {
+  console.log('save')
+  const { userId } = req.params;
+  const { category } = req.body;
   console.log('usersRouter put category:', category);
   const user = await User.findById(userId);
+  console.log('user:', user);
 
   if (user) {
     const { categories } = user;
-    const newCategories = categories.concat(category);
+    console.log('categories:', categories);
 
+    if (categories.includes(category)) {
+      return res.json({
+        success: false,
+        message: 'Category already saved',
+      });
+    }
+    const newCategories = categories.concat(category);
+    console.log('newCategories:', newCategories);
     user.categories = newCategories;
     await user.save();
 
@@ -113,15 +153,16 @@ usersRouter.put('/:userId/categories/:category', async (req, res) => {
 });
 
 // Delete Category
-usersRouter.put('/:userId/categories/:categoryId', async (req, res) => {
-  const { userId, categoryId } = req.params;
-  console.log('usersRouter put categoryId:', categoryId);
+usersRouter.delete('/:userId/categories/:category', async (req, res) => {
+  console.log('delete');
+  const { userId, category } = req.params;
+  console.log('usersRouter put category:', category);
   const user = await User.findById(userId);
 
   if (user) {
     const { categories } = user;
     const newCategories = categories.filter(
-      (category) => category._id.toString() !== categoryId
+      (category) => category !== category
     );
 
     user.categories = newCategories;

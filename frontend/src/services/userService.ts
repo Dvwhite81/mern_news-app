@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ArticleFormData } from '../utils/types';
+import { ArticleType } from '../utils/types';
 
 const baseUrl = 'http://localhost:7000/api';
 
@@ -130,7 +130,7 @@ const getUserCategories = async (token: string) => {
   }
 };
 
-const addUserArticle = async (token: string, newArticle: ArticleFormData) => {
+const addUserArticle = async (token: string, newArticle: ArticleType) => {
   const { data } = await axios.post(
     `${baseUrl}/articles`,
     {
@@ -200,7 +200,7 @@ const addUserCategory = async (token:string, newCategory: string) => {
 
 };
 
-const deleteUserArticle = async (token: string, articleId: string) => {
+const deleteUserArticle = async (token: string, article: ArticleType) => {
   const { user } = await getUserByToken(token);
 
   if (!user) {
@@ -210,8 +210,9 @@ const deleteUserArticle = async (token: string, articleId: string) => {
     };
   }
 
-  console.log('deleteUserArticle articleId:', articleId);
+  console.log('deleteUserArticle article:', article);
   const { id } = user;
+  const articleId = article.uuid;
 
   const { data } = await axios.put(
     `${baseUrl}/users/${id}/articles/${articleId}`
@@ -239,8 +240,13 @@ const deleteUserCategory = async (token: string, category: string) => {
   console.log('deleteUserCategory categoryId:', category);
   const { id } = user;
 
-  const { data } = await axios.put(
-    `${baseUrl}/users/${id}/categories/${category}`
+  const { data } = await axios.delete(
+    `${baseUrl}/users/${id}/categories/${category}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
   );
   console.log('deleteUserCategory data:', data);
   if (data.success) {

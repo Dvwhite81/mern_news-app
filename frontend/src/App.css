@@ -5,6 +5,12 @@
   --main-height: 90vh;
   --sidebar-width: 25vw;
   --main-width: 75vw;
+
+  --bg-dark: #414141;
+  --bg-medium: #58595b;
+  --bg-light: #ababac;
+  --dark-blue: #302e7c;
+  --medium-blue: #005195;
 }
 
 #root,
@@ -27,7 +33,25 @@
   text-decoration: none;
 }
 
-.link:hover {
+.link:hover,
+.icon:hover {
   cursor: pointer;
   transform: scale(1.2);
+}
+
+button {
+  background-color: var(--bg-dark);
+  border-radius: 8px;
+  border: none;
+  color: whitesmoke;
+  cursor: pointer;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: bold;
+  transition: background-color 0.25s;
+}
+
+button:hover {
+  background-color: whitesmoke;
+  color: var(--bg-dark);
 }

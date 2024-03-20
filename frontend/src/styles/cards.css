@@ -1,0 +1,53 @@
+.card-link {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.card {
+  background-color: whitesmoke;
+  border-radius: 10px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+  color: black;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 90%;
+}
+
+.card-header img {
+  width: 100%;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+}
+
+.save-icon-container {
+  height: 3rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.save-icon {
+  height: 80%;
+}
+
+.save-icon-container img:nth-child(2) {
+  display: none; 
+}
+
+.save-icon-container:hover img:nth-child(1) {
+  display: none;
+}
+
+.save-icon-container:hover img:nth-child(2) {
+  display: block;
+}
+

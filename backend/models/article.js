@@ -5,6 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const articleSchema = new mongoose_1.default.Schema({
+    uuid: {
+        type: String,
+        required: true,
+    },
     title: {
         type: String,
         required: true,
@@ -20,11 +24,6 @@ const articleSchema = new mongoose_1.default.Schema({
     image_url: {
         type: Number,
         default: 1,
-    },
-    created: {
-        type: Date,
-        required: true,
-        default: new Date(),
     },
     user: {
         type: mongoose_1.default.Schema.Types.ObjectId,

@@ -7,8 +7,8 @@ interface ProfileProps {
   loggedInUser: UserType | null;
   userArticles: ArticleType[];
   userCategories: string[];
-  handleDeleteArticle: (articleId: string) => void;
-  handleDeleteCategory: (category: string) => void;
+  removeArticle: (article: ArticleType) => void;
+  removeCategory: (category: string) => void;
   handleLogOut: (e: SyntheticEvent) => void;
 }
 
@@ -16,8 +16,8 @@ const Profile = ({
   loggedInUser,
   userArticles,
   userCategories,
-  handleDeleteArticle,
-  handleDeleteCategory,
+  removeArticle,
+  removeCategory,
   handleLogOut,
 }: ProfileProps) => {
   const [showArticles, setShowArticles] = useState(false);
@@ -63,7 +63,7 @@ const Profile = ({
                 <p>{article.title}</p>
                 <button
                   type="button"
-                  onClick={() => handleDeleteArticle(article.title)}
+                  onClick={() => removeArticle(article)}
                 >
                   x
                 </button>
@@ -84,7 +84,7 @@ const Profile = ({
                 <p>{category}</p>
                 <button
                   type="button"
-                  onClick={() => handleDeleteCategory(category)}
+                  onClick={() => removeCategory(category)}
                 >
                   x
                 </button>

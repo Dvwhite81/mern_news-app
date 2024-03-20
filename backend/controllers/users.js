@@ -18,12 +18,9 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../utils/config"));
 const user_1 = __importDefault(require("../models/user"));
 const usersRouter = (0, express_1.Router)();
-const populateQuery = [
-    { path: 'articles', select: 'title' },
-];
 // Get All Users
 usersRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield user_1.default.find({}).populate(populateQuery);
+    const users = yield user_1.default.find({});
     res.json(users);
 }));
 // Get User by Token
@@ -71,8 +68,37 @@ usersRouter.get('/:userId/categories', (req, res) => __awaiter(void 0, void 0, v
         res.status(404).end();
     }
 }));
+// Add Article
+usersRouter.post('/:userId/articles', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('save');
+    const { userId } = req.params;
+    const { article } = req.body;
+    const user = yield user_1.default.findById(userId);
+    console.log('user:', user);
+    if (user) {
+        const { articles } = user;
+        console.log('articles:', articles);
+        if (articles.includes(article)) {
+            return res.json({
+                success: false,
+                message: 'Article already saved',
+            });
+        }
+        const newArticles = articles.concat(article);
+        console.log('newArticles:', newArticles);
+        user.articles = newArticles;
+        yield user.save();
+        res.json({
+            success: true,
+            articles: newArticles,
+        });
+    }
+    else {
+        res.status(404).end();
+    }
+}));
 // Delete Article
-usersRouter.put('/:userId/articles/:articleId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+usersRouter.delete('/:userId/articles/:articleId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, articleId } = req.params;
     console.log('usersRouter put articleId:', articleId);
     const user = yield user_1.default.findById(userId);
@@ -91,13 +117,24 @@ usersRouter.put('/:userId/articles/:articleId', (req, res) => __awaiter(void 0, 
     }
 }));
 // Add Category
-usersRouter.put('/:userId/categories/:category', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId, category } = req.params;
+usersRouter.post('/:userId/categories', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('save');
+    const { userId } = req.params;
+    const { category } = req.body;
     console.log('usersRouter put category:', category);
     const user = yield user_1.default.findById(userId);
+    console.log('user:', user);
     if (user) {
         const { categories } = user;
+        console.log('categories:', categories);
+        if (categories.includes(category)) {
+            return res.json({
+                success: false,
+                message: 'Category already saved',
+            });
+        }
         const newCategories = categories.concat(category);
+        console.log('newCategories:', newCategories);
         user.categories = newCategories;
         yield user.save();
         res.json({
@@ -110,13 +147,14 @@ usersRouter.put('/:userId/categories/:category', (req, res) => __awaiter(void 0,
     }
 }));
 // Delete Category
-usersRouter.put('/:userId/categories/:categoryId', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { userId, categoryId } = req.params;
-    console.log('usersRouter put categoryId:', categoryId);
+usersRouter.delete('/:userId/categories/:category', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('delete');
+    const { userId, category } = req.params;
+    console.log('usersRouter put category:', category);
     const user = yield user_1.default.findById(userId);
     if (user) {
         const { categories } = user;
-        const newCategories = categories.filter((category) => category._id.toString() !== categoryId);
+        const newCategories = categories.filter((category) => category !== category);
         user.categories = newCategories;
         yield user.save();
         res.json({

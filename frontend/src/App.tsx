@@ -25,14 +25,11 @@ function App() {
 
       if (token) {
         const result = await userService.getUserByToken(token);
-        console.log('checkLogged result:', result);
         if (result) {
           const { success, user } = result;
-          console.log('checkLogged success:', success);
 
           if (success && user) {
             const { user } = result;
-            console.log('checkLogged user:', user);
 
             setLoggedInUser(user);
             setUserArticles(user.articles);
@@ -46,7 +43,7 @@ function App() {
     };
 
     checkedLoggedIn();
-  }, [navigate]);
+  }, []);
 
   const handleRegister = async (
     username: string,
@@ -149,14 +146,14 @@ function App() {
     }
   };
 
-  const handleDeleteArticle = async (articleId: string) => {
-    console.log('handleDeleteArticle articleId:', articleId);
+  const removeArticle = async (article: ArticleType) => {
+    console.log('handleDeleteArticle articleId:', article);
     if (!loggedInUser) return;
 
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const result = await userService.deleteUserArticle(token, articleId);
+    const result = await userService.deleteUserArticle(token, article);
     console.log('handleDelete result:', result);
     if (result) {
       const { success, articles, message } = result;
@@ -170,7 +167,7 @@ function App() {
     }
   };
 
-  const handleDeleteCategory = async (category: string) => {
+  const removeCategory = async (category: string) => {
     console.log('handleDeleteArticle category:', category);
     if (!loggedInUser) return;
 
@@ -209,13 +206,24 @@ function App() {
               loggedInUser={loggedInUser}
               userArticles={userArticles}
               userCategories={userCategories}
-              handleDeleteArticle={handleDeleteArticle}
-              handleDeleteCategory={handleDeleteCategory}
+              removeArticle={removeArticle}
+              removeCategory={removeCategory}
               handleLogOut={handleLogOut}
             />
           }
         />
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={
+            <Home
+              loggedInUser={loggedInUser}
+              saveArticle={saveArticle}
+              removeArticle={removeArticle}
+              saveCategory={saveCategory}
+              removeCategory={removeCategory}
+            />
+          }
+        />
         <Route
           path="/register"
           element={<Register handleRegister={handleRegister} />}

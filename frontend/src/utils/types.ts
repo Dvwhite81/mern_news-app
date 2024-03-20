@@ -34,6 +34,7 @@ export interface UserResult {
 }
 
 export interface ArticleType {
+  uuid: string;
   title: string;
   snippet: string;
   url: string;
