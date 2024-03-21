@@ -5,12 +5,10 @@ interface NewsCardProps {
   article: ArticleType;
   loggedInUser: UserType | null;
   handleSave: (item: ArticleType | string) => void;
+  userArticles: ArticleType[];
 }
 
-const NewsCard = ({ article, loggedInUser, handleSave }: NewsCardProps) => {
-  const isSaved = (loggedInUser && loggedInUser.articles.includes(article)) ? true : false;
-
-  
+const NewsCard = ({ article, loggedInUser, handleSave, userArticles }: NewsCardProps) => {
   return (
     <a className='card-link' href={article.url} target='_blank'>
       <div className='card'>
@@ -19,7 +17,7 @@ const NewsCard = ({ article, loggedInUser, handleSave }: NewsCardProps) => {
         </div>
         <div className='card-body'>
           {loggedInUser && (
-            <SaveIcon item={article} isSaved={isSaved} handleSave={handleSave} />
+            <SaveIcon item={article} isSaved={userArticles.includes(article)} handleSave={handleSave} />
           )}
           <h4>{article.title}</h4>
           <p>{article.snippet}</p>

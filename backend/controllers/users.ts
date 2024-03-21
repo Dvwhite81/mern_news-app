@@ -104,7 +104,7 @@ usersRouter.delete('/:userId/articles/:articleId', async (req, res) => {
   if (user) {
     const { articles } = user;
     const newArticles = articles.filter(
-      (article) => article._id.toString() !== articleId
+      (article) => article.uuid !== articleId
     );
 
     user.articles = newArticles;

@@ -131,8 +131,19 @@ const getUserCategories = async (token: string) => {
 };
 
 const addUserArticle = async (token: string, newArticle: ArticleType) => {
+  const { user } = await getUserByToken(token);
+
+  if (!user) {
+    return {
+      success: false,
+      message: 'No user found',
+    };
+  }
+
+  const { id } = user;
+
   const { data } = await axios.post(
-    `${baseUrl}/articles`,
+    `${baseUrl}/users/${id}/articles`,
     {
       token,
       article: newArticle,
@@ -214,7 +225,7 @@ const deleteUserArticle = async (token: string, article: ArticleType) => {
   const { id } = user;
   const articleId = article.uuid;
 
-  const { data } = await axios.put(
+  const { data } = await axios.delete(
     `${baseUrl}/users/${id}/articles/${articleId}`
   );
   console.log('deleteUserArticle data:', data);

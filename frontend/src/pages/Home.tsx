@@ -18,6 +18,9 @@ const Home = ({ loggedInUser, saveArticle, removeArticle, saveCategory, removeCa
   const [userCategories, setUserCategories] = useState(
     loggedInUser ? loggedInUser.categories : []
   );
+  const [userArticles, setUserArticles] = useState(
+    loggedInUser ? loggedInUser.articles : []
+  );
   const [query, setQuery] = useState<string>('');
   const [newsResults, setNewsResults] = useState<ArticleType[]>([]);
 
@@ -42,10 +45,10 @@ const Home = ({ loggedInUser, saveArticle, removeArticle, saveCategory, removeCa
       if (userCategories.includes(category)) {
         console.log('handleSaveCategory INCLUDES');
         removeCategory(category);
-        setUserCategories(userCategories?.filter((category) => category !== selectedCategory));
+        setUserCategories(userCategories?.filter((c) => c !== category));
       } else {
         saveCategory(category);
-        setUserCategories(userCategories?.concat(selectedCategory));
+        setUserCategories(userCategories?.concat(category));
       }
     }
   };
@@ -53,10 +56,15 @@ const Home = ({ loggedInUser, saveArticle, removeArticle, saveCategory, removeCa
   const handleSaveArticle = async (article: ArticleType) => {
     console.log('handleSaveArticle article:', article);
     if (loggedInUser) {
-      if (loggedInUser.articles.includes(article)) {
+      console.log('handleSaveArticle loggedInUser.articles:', loggedInUser.articles);
+      console.log('handleSaveArticle userArticles:', userArticles);
+
+      if (userArticles.includes(article)) {
         removeArticle(article);
+        setUserArticles(userArticles?.filter((a) => a !== article));
       } else {
         saveArticle(article);
+        setUserArticles(userArticles?.concat(article));
       }
     }
   };
@@ -114,6 +122,7 @@ const Home = ({ loggedInUser, saveArticle, removeArticle, saveCategory, removeCa
               article={article}
               loggedInUser={loggedInUser}
               handleSave={handleSave}
+              userArticles={userArticles}
             />
           ))}
         </div>

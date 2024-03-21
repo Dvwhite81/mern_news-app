@@ -20,6 +20,7 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('App useEffect');
     const checkedLoggedIn = async () => {
       const token = localStorage.getItem('token');
 

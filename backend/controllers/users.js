@@ -104,7 +104,7 @@ usersRouter.delete('/:userId/articles/:articleId', (req, res) => __awaiter(void 
     const user = yield user_1.default.findById(userId);
     if (user) {
         const { articles } = user;
-        const newArticles = articles.filter((article) => article._id.toString() !== articleId);
+        const newArticles = articles.filter((article) => article.uuid !== articleId);
         user.articles = newArticles;
         yield user.save();
         res.json({
