@@ -15,6 +15,9 @@ interface HomeProps {
 
 const Home = ({ loggedInUser, saveArticle, removeArticle, saveCategory, removeCategory }: HomeProps) => {
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [userCategories, setUserCategories] = useState(
+    loggedInUser ? loggedInUser.categories : []
+  );
   const [query, setQuery] = useState<string>('');
   const [newsResults, setNewsResults] = useState<ArticleType[]>([]);
 
@@ -35,10 +38,14 @@ const Home = ({ loggedInUser, saveArticle, removeArticle, saveCategory, removeCa
   const handleSaveCategory = async (category: string) => {
     console.log('handleSaveCategory category:', category);
     if (loggedInUser) {
-      if (loggedInUser.categories.includes(category)) {
+      console.log('handleSaveCategory LOGGEDIN');
+      if (userCategories.includes(category)) {
+        console.log('handleSaveCategory INCLUDES');
         removeCategory(category);
+        setUserCategories(userCategories?.filter((category) => category !== selectedCategory));
       } else {
         saveCategory(category);
+        setUserCategories(userCategories?.concat(selectedCategory));
       }
     }
   };
@@ -96,7 +103,7 @@ const Home = ({ loggedInUser, saveArticle, removeArticle, saveCategory, removeCa
               </h2>
               <SaveIcon
                 item={selectedCategory}
-                isSaved={(loggedInUser && loggedInUser.categories.includes(selectedCategory)) ? true : false}
+                isSaved={userCategories.includes(selectedCategory)}
                 handleSave={handleSave}  
               />
             </div>

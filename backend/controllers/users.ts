@@ -162,7 +162,7 @@ usersRouter.delete('/:userId/categories/:category', async (req, res) => {
   if (user) {
     const { categories } = user;
     const newCategories = categories.filter(
-      (category) => category !== category
+      (c) => c !== category
     );
 
     user.categories = newCategories;

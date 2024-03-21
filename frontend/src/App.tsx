@@ -43,7 +43,7 @@ function App() {
     };
 
     checkedLoggedIn();
-  }, []);
+  }, [navigate]);
 
   const handleRegister = async (
     username: string,

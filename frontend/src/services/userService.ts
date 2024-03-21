@@ -148,7 +148,7 @@ const addUserArticle = async (token: string, newArticle: ArticleType) => {
   if (data.success) {
     return {
       success: true,
-      message: data.message,
+      message: 'Saved article',
       newArticle: newArticle,
       articles: data.articles,
     };
@@ -172,7 +172,7 @@ const addUserCategory = async (token:string, newCategory: string) => {
 
   const { id } = user;
   const { data } = await axios.post(
-    `${baseUrl}/users/${id}/categories/${newCategory}`,
+    `${baseUrl}/users/${id}/categories`,
     {
       token,
       category: newCategory,
@@ -187,7 +187,7 @@ const addUserCategory = async (token:string, newCategory: string) => {
   if (data.success) {
     return {
       success: true,
-      message: data.message,
+      message: 'Saved category',
       newCategory: newCategory,
       categories: data.categories,
     };
@@ -221,7 +221,7 @@ const deleteUserArticle = async (token: string, article: ArticleType) => {
   if (data.success) {
     return {
       success: true,
-      message: 'Deleted article',
+      message: 'Removed article',
       articles: data.articles,
     };
   }
@@ -252,7 +252,7 @@ const deleteUserCategory = async (token: string, category: string) => {
   if (data.success) {
     return {
       success: true,
-      message: 'Deleted category',
+      message: 'Removed category',
       categories: data.categories,
     };
   }

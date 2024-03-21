@@ -154,7 +154,7 @@ usersRouter.delete('/:userId/categories/:category', (req, res) => __awaiter(void
     const user = yield user_1.default.findById(userId);
     if (user) {
         const { categories } = user;
-        const newCategories = categories.filter((category) => category !== category);
+        const newCategories = categories.filter((c) => c !== category);
         user.categories = newCategories;
         yield user.save();
         res.json({
